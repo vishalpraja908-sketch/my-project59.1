@@ -1,8 +1,10 @@
-
+import{useState} from "react";
 import CartList from "./CartList";
 
 function CartPage() {
-  const cartItems = [
+  const  [cartItems,setCartItems]=useState([
+
+ 
     {
         id : "1",
       imgUrl: "https://codeyogi.io/coffee-mug.jpeg",
@@ -19,14 +21,40 @@ function CartPage() {
       quantity: 4,
       subtotal: 136,
     },
-  ];
+  
 
+ ]);
+       const updateQuantity = (id, quantity) => {
+    if (quantity < 0) return;
+    const updatedCart = cartItems.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          quantity: quantity,
+          subtotal: quantity * item.price,
+        };
+      }
+      return item;
+    });
+    setCartItems(updatedCart);
+  };
+  const deleteItem = (id) => {
+    const updatedCart = cartItems.filter((item) => item.id !== id);
+    setCartItems(updatedCart);
+  };
+ 
+  const updateCart = () => {
+    setCartItems([...cartItems]);
+  };
   return (
     <div className=" bg-gray-50 py-10 px-4 md:px-16">
       
 
      
-      <CartList cartItems={cartItems} />
+      <CartList cartItems={cartItems}
+        updateQuantity={updateQuantity}
+        deleteItem={deleteItem}
+       />
       <div className="flex flex-col  justify-between gap-10 mt-6  mb-10 px-50 ">
 
 <div className="flex gap-12 border-2 px-6 py-6 ">
@@ -39,7 +67,8 @@ function CartPage() {
             APPLY COUPON
           </button>
           
-          <button className="bg-red-300 text-white  rounded-lg px-4 py-2 flex ">
+          <button className="bg-red-300 text-white  rounded-lg px-4 py-2 flex "
+           onClick={updateCart}>
             UPDATE CART
           </button>
           </div>
@@ -58,7 +87,7 @@ function CartPage() {
           </div>
           <div className="flex justify-between text-gray-700 font-semibold mb-4">
             <h2>Total:</h2>
-            <p>$166.00</p>
+    <p>$166.00</p>
           </div>
           <button className="bg-red-600 w-full text-white py-2">
             PROCEED TO CHECKOUT
